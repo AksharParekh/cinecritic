@@ -26,7 +26,7 @@ const MainLayout = () => {
         return;
       }
 
-      const { response, err } = await userApi.getInfo();
+      const { response } = await userApi.getInfo();
 
       if (response) {
         dispatch(setUser(response));
@@ -35,7 +35,7 @@ const MainLayout = () => {
 
       // On error, explicitly remove stale token and clear user state so UI can't stay authenticated
       dispatch(setUser(null));
-      try { window.localStorage.removeItem("actkn"); } catch (e) {}
+      try { window.localStorage.removeItem("actkn"); } catch {}
     };
 
     authUser();
@@ -55,9 +55,7 @@ const MainLayout = () => {
 
   return (
     <>
-      {/* global loading */}
       <GlobalLoading />
-      {/* global loading */}
 
       {/* login modal */}
       <AuthModal />

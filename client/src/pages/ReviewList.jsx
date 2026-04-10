@@ -118,7 +118,7 @@ const ReviewList = () => {
     };
 
     getReviews();
-  }, []);
+  }, [dispatch]);
 
   const onLoadMore = () => {
     setFilteredReviews([...filteredReviews, ...[...reviews].splice(page * skip, skip)]);
