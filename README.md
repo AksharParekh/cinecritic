@@ -81,8 +81,6 @@ This project was created using the following technologies.
 - [react-router-dom](https://www.npmjs.com/package/react-router-dom) - To handle routing
 - [axios](https://www.npmjs.com/package/axios) - For making Api calls
 - [Material UI](https://mui.com/) - For User Interface
-- [CK-Editor](https://ckeditor.com/docs/ckeditor5/latest/builds/guides/integration/frameworks/react.html) - Rich Text Editor 
-- [Formik](https://formik.org/) - Manage status and validation of data on forms efficiently
 - [React Redux](https://react-redux.js.org/) - manage application state efficiently and provide a more structured mechanism for managing data
 - [React Toastify](https://www.npmjs.com/package/react-toastify) - To display interactive and responsive notifications (toasts) in web applications
 - [Swiper](https://swiperjs.com/) - To create responsive and interactive sliders or carousels on web pages
