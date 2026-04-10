@@ -2,12 +2,6 @@
 
 Fronted (Client)
 
-## Optional: Public Data Fallback When Backend Is Down
-
-You can let the client fetch public movie/person data directly from TMDB when your backend is unavailable.
-
-Create `client/.env.local` with:
-
 ```env
 REACT_APP_TMDB_FALLBACK=true
 REACT_APP_TMDB_BASE_URL=https://api.themoviedb.org/3/
