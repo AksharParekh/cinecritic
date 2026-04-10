@@ -78,7 +78,6 @@ This project was created using the following technologies.
 
 - [React js ](https://www.npmjs.com/package/react) - JavaScript library that is used for building user interfaces specifically for single-page applications
 - [React Hooks  ](https://reactjs.org/docs/hooks-intro.html) - For managing and centralizing application state
-- [react-router-dom](https://www.npmjs.com/package/react-router-dom) - To handle routing
 - [axios](https://www.npmjs.com/package/axios) - For making Api calls
 - [Material UI](https://mui.com/) - For User Interface
 - [React Redux](https://react-redux.js.org/) - manage application state efficiently and provide a more structured mechanism for managing data
