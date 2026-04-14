@@ -14,6 +14,9 @@ app.use(cookieParser());
 
 app.use("/api/v1", routes);
 
+// lightweight health check for Vercel/function readiness
+app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
+
 // In serverless environments (Vercel) we must not call `listen()` or exit the process.
 // Export the Express `app` so Vercel can invoke it as a serverless function.
 
