@@ -20,9 +20,15 @@ app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
 // In serverless environments (Vercel) we must not call `listen()` or exit the process.
 // Export the Express `app` so Vercel can invoke it as a serverless function.
 
-mongoose.connect(process.env.MONGODB_URL)
-  .then(() => console.log("Mongodb connected"))
-  .catch((err) => console.log("Mongodb connection error:", err));
+const mongoUrl = process.env.MONGODB_URL;
+
+if (mongoUrl) {
+  mongoose.connect(mongoUrl)
+    .then(() => console.log("Mongodb connected"))
+    .catch((err) => console.log("Mongodb connection error:", err));
+} else {
+  console.warn("MONGODB_URL is not set; database routes will fail until it is configured.");
+}
 
 export default app;
 
