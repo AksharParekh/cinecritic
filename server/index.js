@@ -14,7 +14,8 @@ app.use(cookieParser());
 
 app.use("/api/v1", routes);
 
-// lightweight health check for Vercel/function readiness
+// lightweight root and health checks for Vercel/function readiness
+app.get("/", (req, res) => res.status(200).json({ status: "ok", service: "cinecritic-api" }));
 app.get("/health", (req, res) => res.status(200).json({ status: "ok" }));
 
 // In serverless environments (Vercel) we must not call `listen()` or exit the process.
