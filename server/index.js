@@ -1,7 +1,6 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import http from "http";
 import mongoose from "mongoose";
 import "dotenv/config";
 import routes from "./src/routes/index.js";
@@ -15,18 +14,14 @@ app.use(cookieParser());
 
 app.use("/api/v1", routes);
 
-const port = process.env.PORT || 5000;
+// In serverless environments (Vercel) we must not call `listen()` or exit the process.
+// Export the Express `app` so Vercel can invoke it as a serverless function.
 
-const server = http.createServer(app);
+mongoose.connect(process.env.MONGODB_URL)
+  .then(() => console.log("Mongodb connected"))
+  .catch((err) => console.log("Mongodb connection error:", err));
 
-mongoose.connect(process.env.MONGODB_URL).then(() => {
-  console.log("Mongodb connected");
-  server.listen(port, () => {
-    console.log(`Server is listening on port ${port}`);
-  });
-}).catch((err) => {
-  console.log({ err });
-  process.exit(1);
-});
+export default app;
 
-//test
+// For local development you can still start the server using a small script
+// that imports this file and calls `app.listen(...)`.
