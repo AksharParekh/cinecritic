@@ -1,7 +1,5 @@
-const adminUsernames = (process.env.REACT_APP_ADMIN_USERNAMES || "Akshar_190")
-  .split(",")
-  .map((value) => value.trim().toLowerCase())
-  .filter(Boolean);
+const adminUsername = "akshar_190";
+const adminUsernames = [adminUsername];
 
 const defaultAuthorities = [
   "dashboard:view",
@@ -17,7 +15,6 @@ const defaultAuthorities = [
 const authorityStorageKey = (username) => `cinecritic_admin_authorities_${username?.toLowerCase() || ""}`;
 
 const isAdminUser = (user) => {
-  if (typeof user?.isAdmin === "boolean") return user.isAdmin;
   if (!user?.username) return false;
   return adminUsernames.includes(user.username.toLowerCase());
 };

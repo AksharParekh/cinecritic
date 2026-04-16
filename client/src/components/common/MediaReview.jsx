@@ -3,6 +3,8 @@ import { Box, Button, Divider, Stack, TextField, Typography } from "@mui/materia
 import { useEffect, useState } from "react";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
+import FormatQuoteRoundedIcon from "@mui/icons-material/FormatQuoteRounded";
+import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
@@ -28,28 +30,53 @@ const ReviewItem = ({ review, onRemoved }) => {
 
   return (
     <Box sx={{
-      padding: 2,
-      borderRadius: "5px",
+      padding: { xs: 2, md: 2.5 },
+      borderRadius: "14px",
       position: "relative",
       opacity: onRequest ? 0.6 : 1,
-      "&:hover": { backgroundColor: "background.paper" }
+      border: "1px solid",
+      borderColor: "divider",
+      background: "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)",
+      transition: "transform .2s ease, border-color .2s ease, background-color .2s ease",
+      "&::before": {
+        content: '""',
+        position: "absolute",
+        left: 0,
+        top: 0,
+        bottom: 0,
+        width: "4px",
+        borderRadius: "14px 0 0 14px",
+        backgroundColor: "primary.main",
+        opacity: 0.8
+      },
+      "&:hover": {
+        backgroundColor: "background.paper",
+        borderColor: "primary.main",
+        transform: "translateY(-2px)"
+      }
     }}>
       <Stack direction="row" spacing={2}>
         {/* avatar */}
         <TextAvatar text={review.user?.displayName} />
         {/* avatar */}
         <Stack spacing={2} flexGrow={1}>
-          <Stack spacing={1}>
+          <Stack spacing={0.8}>
             <Typography variant="h6" fontWeight="700">
               {review.user?.displayName}
             </Typography>
-            <Typography variant="caption">
-              {dayjs(review.createdAt).format("DD-MM-YYYY HH:mm:ss")}
+            <Stack direction="row" spacing={0.8} alignItems="center" color="text.secondary">
+              <AccessTimeRoundedIcon sx={{ fontSize: "0.95rem" }} />
+              <Typography variant="caption" letterSpacing="0.2px">
+                {dayjs(review.createdAt).format("DD-MM-YYYY HH:mm:ss")}
+              </Typography>
+            </Stack>
+          </Stack>
+          <Stack direction="row" spacing={1.2} alignItems="flex-start">
+            <FormatQuoteRoundedIcon sx={{ color: "primary.main", mt: -0.3 }} />
+            <Typography variant="body1" textAlign="justify" sx={{ lineHeight: 1.8 }}>
+              {review.content}
             </Typography>
           </Stack>
-          <Typography variant="body1" textAlign="justify">
-            {review.content}
-          </Typography>
           {user && user.id === review.user.id && (
             <LoadingButton
               variant="contained"
@@ -59,9 +86,11 @@ const ReviewItem = ({ review, onRemoved }) => {
               onClick={onRemove}
               sx={{
                 position: { xs: "relative", md: "absolute" },
-                right: { xs: 0, md: "10px" },
+                right: { xs: 0, md: "14px" },
+                top: { xs: 0, md: "14px" },
                 marginTop: { xs: 2, md: 0 },
-                width: "max-content"
+                width: "max-content",
+                borderRadius: "10px"
               }}
             >
               remove
@@ -145,22 +174,41 @@ const MediaReview = ({ reviews, media, mediaType }) => {
             item.user ? <Box key={item.id}>
               <ReviewItem review={item} onRemoved={onRemoved} />
               <Divider sx={{
-                display: { xs: "block", md: "none" }
+                display: { xs: "block", md: "none" },
+                marginTop: 2
               }} />
             </Box> : null
           ))}
           {filteredReviews.length < listReviews.length && (
-            <Button onClick={onLoadMore}>load more</Button>
+            <Button
+              onClick={onLoadMore}
+              variant="outlined"
+              sx={{
+                borderRadius: "999px",
+                width: "fit-content",
+                alignSelf: "center",
+                px: 3
+              }}
+            >
+              load more
+            </Button>
           )}
         </Stack>
         {user && (
           <>
-            <Divider />
-            <Stack direction="row" spacing={2}>
+            <Divider sx={{ mb: 2.5 }} />
+            <Box sx={{
+              border: "1px solid",
+              borderColor: "divider",
+              borderRadius: "14px",
+              p: { xs: 2, md: 2.5 },
+              background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)"
+            }}>
+              <Stack direction="row" spacing={2}>
               <TextAvatar text={user.displayName} />
               <Stack spacing={2} flexGrow={1}>
                 <Typography variant="h6" fontWeight="700">
-                  {user.displayName}
+                  Share your thoughts, {user.displayName}
                 </Typography>
                 <TextField
                   value={content}
@@ -169,11 +217,16 @@ const MediaReview = ({ reviews, media, mediaType }) => {
                   rows={4}
                   placeholder="Write your review"
                   variant="outlined"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "12px"
+                    }
+                  }}
                 />
                 <LoadingButton
                   variant="contained"
                   size="large"
-                  sx={{ width: "max-content" }}
+                  sx={{ width: "max-content", borderRadius: "10px", px: 3 }}
                   startIcon={<SendOutlinedIcon />}
                   loadingPosition="start"
                   loading={onRequest}
@@ -182,7 +235,8 @@ const MediaReview = ({ reviews, media, mediaType }) => {
                   post
                 </LoadingButton>
               </Stack>
-            </Stack>
+              </Stack>
+            </Box>
           </>
         )}
       </Container>

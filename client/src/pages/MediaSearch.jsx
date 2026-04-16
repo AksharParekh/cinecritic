@@ -1,10 +1,12 @@
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Stack, TextField, Toolbar } from "@mui/material";
 import { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import mediaApi from "../api/modules/media.api";
 import MediaGrid from "../components/common/MediaGrid";
 import uiConfigs from "../configs/ui.configs";
+import { routesGen } from "../routes/routes";
 
 const mediaTypes = ["movie", "tv", "people"];
 const searchPlaceholders = {
@@ -90,6 +92,17 @@ const MediaSearch = () => {
                 {item}
               </Button>
             ))}
+            <Button
+              size="large"
+              component={Link}
+              to={routesGen.genrePage}
+              variant="text"
+              sx={{
+                color: "text.primary"
+              }}
+            >
+              genres
+            </Button>
           </Stack>
           <TextField
             color="success"

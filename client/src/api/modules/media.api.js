@@ -6,13 +6,15 @@ import runtimeConfigs from "../configs/runtime.configs";
 const mediaEndpoints = {
   list: ({ mediaType, mediaCategory, page }) => `${mediaType}/${mediaCategory}?page=${page}`,
   detail: ({ mediaType, mediaId }) => `${mediaType}/detail/${mediaId}`,
-  search: ({ mediaType, query, page }) => `${mediaType}/search?query=${query}&page=${page}`
+  search: ({ mediaType, query, page }) => `${mediaType}/search?query=${query}&page=${page}`,
+  byGenre: ({ mediaType, genreId, page }) => `${mediaType}/genres/${genreId}?page=${page}`
 };
 
 const tmdbMediaEndpoints = {
   list: ({ mediaType, mediaCategory }) => `${mediaType}/${mediaCategory}`,
   detail: ({ mediaType, mediaId }) => `${mediaType}/${mediaId}`,
-  search: ({ mediaType }) => mediaType === "people" ? "search/person" : `search/${mediaType}`
+  search: ({ mediaType }) => mediaType === "people" ? "search/person" : `search/${mediaType}`,
+  byGenre: ({ mediaType }) => `discover/${mediaType}`
 };
 
 const normalizeTmdbDetail = (response) => {
@@ -36,6 +38,18 @@ const normalizeTmdbDetail = (response) => {
     recommend: response?.recommendations?.results || [],
     isFavorite: false
   };
+};
+
+const normalizeMediaResults = (results) => {
+  const map = new Map();
+
+  (results || []).forEach((item) => {
+    const key = item?.id || item?.mediaId;
+    if (!key || map.has(key)) return;
+    map.set(key, item);
+  });
+
+  return Array.from(map.values());
 };
 
 const mediaApi = {
@@ -111,6 +125,76 @@ const mediaApi = {
         return { response };
       } catch (tmdbErr) {
         return { err: tmdbErr };
+      }
+    }
+  },
+  getByGenre: async ({ mediaType, genreId, page }) => {
+    try {
+      const response = await publicClient.get(
+        mediaEndpoints.byGenre({ mediaType, genreId, page })
+      );
+
+      return { response };
+    } catch (err) {
+      if (runtimeConfigs.tmdbKey) {
+        try {
+          const response = await tmdbClient.get(
+            tmdbMediaEndpoints.byGenre({ mediaType }),
+            {
+              params: {
+                with_genres: genreId,
+                page
+              }
+            }
+          );
+
+          return { response };
+        } catch {
+          // Continue to local filtering fallback below.
+        }
+      }
+
+      try {
+        const [popularRes, topRatedRes] = await Promise.all([
+          publicClient.get(mediaEndpoints.list({ mediaType, mediaCategory: "popular", page: 1 })),
+          publicClient.get(mediaEndpoints.list({ mediaType, mediaCategory: "top_rated", page: 1 }))
+        ]);
+
+        const allResults = normalizeMediaResults([
+          ...(popularRes?.results || []),
+          ...(topRatedRes?.results || [])
+        ]);
+
+        const filtered = allResults.filter((item) =>
+          Array.isArray(item?.genre_ids) && item.genre_ids.includes(Number(genreId))
+        );
+
+        return {
+          response: {
+            page: 1,
+            results: filtered,
+            total_pages: 1,
+            total_results: filtered.length
+          }
+        };
+      } catch {
+        if (!runtimeConfigs.tmdbFallbackEnabled) return { err };
+
+        try {
+          const response = await tmdbClient.get(
+            tmdbMediaEndpoints.byGenre({ mediaType }),
+            {
+              params: {
+                with_genres: genreId,
+                page
+              }
+            }
+          );
+
+          return { response };
+        } catch (tmdbErr) {
+          return { err: tmdbErr };
+        }
       }
     }
   }

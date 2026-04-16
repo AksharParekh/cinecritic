@@ -25,6 +25,9 @@ const tmdbEndpoints = {
   mediaSearch: ({ mediaType, query, page }) => tmdbConfig.getUrl(
     `search/${mediaType}`, { query, page }
   ),
+  mediaByGenre: ({ mediaType, genreId, page }) => tmdbConfig.getUrl(
+    `discover/${mediaType}`, { with_genres: genreId, page }
+  ),
   personDetail: ({ personId }) => tmdbConfig.getUrl(
     `person/${personId}`
   ),

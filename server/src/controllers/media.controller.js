@@ -106,6 +106,27 @@ const search = async (req, res) => {
   }
 };
 
+const getByGenre = async (req, res) => {
+  try {
+    const { mediaType, genreId } = req.params;
+    const { page } = req.query;
+
+    if (!envConfig.hasTmdbCredentials) {
+      const localResults = getLocalAll({ mediaType }).filter((item) =>
+        Array.isArray(item.genre_ids) && item.genre_ids.includes(Number(genreId))
+      );
+
+      return responseHandler.ok(res, getLocalListPayload({ page, results: localResults }));
+    }
+
+    const response = await tmdbApi.mediaByGenre({ mediaType, genreId, page });
+
+    responseHandler.ok(res, response);
+  } catch {
+    responseHandler.error(res);
+  }
+};
+
 const getDetail = async (req, res) => {
   try {
     const { mediaType, mediaId } = req.params;
@@ -175,4 +196,4 @@ const getDetail = async (req, res) => {
   }
 };
 
-export default { getList, getGenres, search, getDetail };
+export default { getList, getGenres, search, getByGenre, getDetail };

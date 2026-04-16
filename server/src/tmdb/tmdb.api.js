@@ -37,6 +37,10 @@ const tmdbApi = {
     tmdbEndpoints.mediaSearch({ mediaType, query, page }),
     requestConfig()
   ),
+  mediaByGenre: async ({ mediaType, genreId, page }) => await axiosClient.get(
+    tmdbEndpoints.mediaByGenre({ mediaType, genreId, page }),
+    requestConfig()
+  ),
   personDetail: async ({ personId }) => await axiosClient.get(
     tmdbEndpoints.personDetail({ personId }),
     requestConfig()

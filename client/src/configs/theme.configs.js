@@ -38,9 +38,36 @@ const themeConfigs = {
         mode,
         ...customPalette
       },
+      typography: {
+        fontFamily: "Roboto, Helvetica, Arial, sans-serif",
+        h5: {
+          fontWeight: 700,
+          letterSpacing: "0.2px"
+        },
+        h6: {
+          fontWeight: 700,
+          letterSpacing: "0.15px"
+        },
+        button: {
+          fontWeight: 700,
+          letterSpacing: "0.3px"
+        }
+      },
       components: {
         MuiButton: {
-          defaultProps: { disableElevation: true }
+          defaultProps: { disableElevation: true },
+          styleOverrides: {
+            root: {
+              fontFamily: "Roboto, Helvetica, Arial, sans-serif"
+            }
+          }
+        },
+        MuiTypography: {
+          styleOverrides: {
+            root: {
+              fontFamily: "Roboto, Helvetica, Arial, sans-serif"
+            }
+          }
         }
       }
     });

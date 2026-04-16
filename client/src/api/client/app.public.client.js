@@ -2,30 +2,27 @@ import axios from "axios";
 import queryString from "query-string";
 import runtimeConfigs from "../configs/runtime.configs";
 
-const baseURL = runtimeConfigs.contentApiBaseUrl;
-
-const privateClient = axios.create({
-  baseURL,
+const appPublicClient = axios.create({
+  baseURL: runtimeConfigs.authApiBaseUrl,
   paramsSerializer: {
     encode: params => queryString.stringify(params)
   }
 });
 
-privateClient.interceptors.request.use(async config => {
+appPublicClient.interceptors.request.use(async config => {
   return {
     ...config,
     headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${localStorage.getItem("actkn")}`
+      "Content-Type": "application/json"
     }
   };
 });
 
-privateClient.interceptors.response.use((response) => {
+appPublicClient.interceptors.response.use((response) => {
   if (response && response.data) return response.data;
   return response;
 }, (err) => {
   throw (err?.response?.data || { message: "Network error. Please try again." });
 });
 
-export default privateClient
+export default appPublicClient;

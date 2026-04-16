@@ -1,6 +1,7 @@
-import privateClient from "../client/private.client";
-import publicClient from "../client/public.client";
+import appPrivateClient from "../client/app.private.client";
+import appPublicClient from "../client/app.public.client";
 import axios from "axios";
+import runtimeConfigs from "../configs/runtime.configs";
 
 const userEndpoints = {
   signin: "user/signin",
@@ -10,7 +11,7 @@ const userEndpoints = {
   passwordUpdate: "user/update-password"
 };
 
-const localApiBaseUrl = process.env.REACT_APP_LOCAL_API_BASE_URL || "http://localhost:5000/api/v1/";
+const localApiBaseUrl = runtimeConfigs.localSyncApiBaseUrl;
 
 const syncSignedInUserToLocal = async ({ username, displayName }) => {
   try {
@@ -32,7 +33,7 @@ const userApi = {
   signin: async ({ username, password }) => {
     try {
       console.log("send request");
-      const response = await publicClient.post(
+      const response = await appPublicClient.post(
         userEndpoints.signin,
         { username, password }
       );
@@ -47,24 +48,29 @@ const userApi = {
   },
   signup: async ({ username, password, confirmPassword, displayName }) => {
     try {
-      const response = await publicClient.post(
+      const response = await appPublicClient.post(
         userEndpoints.signup,
         { username, password, confirmPassword, displayName }
       );
+
+      await syncSignedInUserToLocal({
+        username: response?.username || username,
+        displayName: response?.displayName || displayName || username
+      });
 
       return { response };
     } catch (err) { return { err }; }
   },
   getInfo: async () => {
     try {
-      const response = await privateClient.get(userEndpoints.getInfo);
+      const response = await appPrivateClient.get(userEndpoints.getInfo);
 
       return { response };
     } catch (err) { return { err }; }
   },
   passwordUpdate: async ({ password, newPassword, confirmNewPassword }) => {
     try {
-      const response = await privateClient.put(
+      const response = await appPrivateClient.put(
         userEndpoints.passwordUpdate,
         { password, newPassword, confirmNewPassword }
       );

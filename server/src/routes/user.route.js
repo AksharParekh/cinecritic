@@ -1,6 +1,7 @@
 import express from "express";
 import { body } from "express-validator";
 import favoriteController from "../controllers/favorite.controller.js";
+import reviewController from "../controllers/review.controller.js";
 import userController from "../controllers/user.controller.js";
 import requestHandler from "../handlers/request.handler.js";
 import userModel from "../models/user.model.js";
@@ -56,6 +57,36 @@ router.post(
     .isLength({ min: 1 }).withMessage("displayName can not be empty"),
   requestHandler.validate,
   userController.syncSignin
+);
+
+router.post(
+  "/sync-favorites",
+  body("username")
+    .exists().withMessage("username is required")
+    .isLength({ min: 8 }).withMessage("username minimum 8 characters"),
+  body("displayName")
+    .optional()
+    .isLength({ min: 1 }).withMessage("displayName can not be empty"),
+  body("favorites")
+    .optional()
+    .isArray().withMessage("favorites must be an array"),
+  requestHandler.validate,
+  favoriteController.syncFavorites
+);
+
+router.post(
+  "/sync-reviews",
+  body("username")
+    .exists().withMessage("username is required")
+    .isLength({ min: 8 }).withMessage("username minimum 8 characters"),
+  body("displayName")
+    .optional()
+    .isLength({ min: 1 }).withMessage("displayName can not be empty"),
+  body("reviews")
+    .optional()
+    .isArray().withMessage("reviews must be an array"),
+  requestHandler.validate,
+  reviewController.syncReviews
 );
 
 router.put(

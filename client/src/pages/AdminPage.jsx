@@ -418,7 +418,7 @@ const AdminPage = () => {
             </Stack>
 
             <Typography variant="caption" color="text.secondary">
-              Tip: update REACT_APP_ADMIN_USERNAMES in client/.env to control which usernames can access this page.
+              Access is restricted to the Akshar_190 account.
             </Typography>
           </Stack>
         </Paper>

@@ -1,7 +1,8 @@
 import axios from "axios";
 import queryString from "query-string";
+import runtimeConfigs from "../configs/runtime.configs";
 
-const baseURL = "https://bertflix-api.vercel.app/api/v1/";
+const baseURL = runtimeConfigs.contentApiBaseUrl;
 
 const publicClient = axios.create({
   baseURL,

@@ -2,16 +2,14 @@ import axios from "axios";
 import queryString from "query-string";
 import runtimeConfigs from "../configs/runtime.configs";
 
-const baseURL = runtimeConfigs.contentApiBaseUrl;
-
-const privateClient = axios.create({
-  baseURL,
+const appPrivateClient = axios.create({
+  baseURL: runtimeConfigs.authApiBaseUrl,
   paramsSerializer: {
     encode: params => queryString.stringify(params)
   }
 });
 
-privateClient.interceptors.request.use(async config => {
+appPrivateClient.interceptors.request.use(async config => {
   return {
     ...config,
     headers: {
@@ -21,11 +19,11 @@ privateClient.interceptors.request.use(async config => {
   };
 });
 
-privateClient.interceptors.response.use((response) => {
+appPrivateClient.interceptors.response.use((response) => {
   if (response && response.data) return response.data;
   return response;
 }, (err) => {
   throw (err?.response?.data || { message: "Network error. Please try again." });
 });
 
-export default privateClient
+export default appPrivateClient;

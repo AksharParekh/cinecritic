@@ -3,13 +3,10 @@ import jsonwebtoken from "jsonwebtoken";
 import crypto from "crypto";
 import responseHandler from "../handlers/response.handler.js";
 
-const adminUsernames = (process.env.ADMIN_USERNAMES || "Akshar_190")
-  .split(",")
-  .map((value) => value.trim().toLowerCase())
-  .filter(Boolean);
+const adminUsername = "akshar_190";
 
 const isAdminSignin = ({ username, password }) => {
-  const usernameIsAdmin = adminUsernames.includes((username || "").toLowerCase());
+  const usernameIsAdmin = (username || "").toLowerCase() === adminUsername;
   if (!usernameIsAdmin) return false;
 
   const adminPassword = process.env.ADMIN_PASSWORD || "";
@@ -111,6 +108,8 @@ const getInfo = async (req, res) => {
     const user = await userModel.findById(req.user.id);
 
     if (!user) return responseHandler.notfound(res);
+
+    user.isAdmin = user.username?.toLowerCase() === adminUsername;
 
     responseHandler.ok(res, user);
   } catch {

@@ -4,6 +4,8 @@ import FavoriteList from "../pages/FavoriteList";
 import MediaDetail from "../pages/MediaDetail";
 import MediaList from "../pages/MediaList";
 import MediaSearch from "../pages/MediaSearch";
+import GenrePage from "../pages/GenrePage";
+import GenreCatalogPage from "../pages/GenreCatalogPage";
 import PasswordUpdate from "../pages/PasswordUpdate";
 import ReviewList from "../pages/ReviewList";
 import ProtectedPage from "../components/common/ProtectedPage";
@@ -15,6 +17,8 @@ export const routesGen = {
   mediaList: (type) => `/${type}`,
   mediaDetail: (type, id) => `/${type}/${id}`,
   mediaSearch: "/search",
+  genrePage: "/search/genres",
+  genreCatalog: (mediaType, genreId) => `/search/genres/${mediaType}/${genreId}`,
   person: (id) => `/person/${id}`,
   favoriteList: "/favorites",
   reviewList: "/reviews",
@@ -37,6 +41,16 @@ const routes = [
     path: "/search",
     element: <MediaSearch />,
     state: "search"
+  },
+  {
+    path: "/search/genres",
+    element: <GenrePage />,
+    state: "search.genre"
+  },
+  {
+    path: "/search/genres/:mediaType/:genreId",
+    element: <GenreCatalogPage />,
+    state: "search.genre"
   },
   {
     path: "/password-update",

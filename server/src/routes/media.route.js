@@ -7,6 +7,8 @@ router.get("/search", mediaController.search);
 
 router.get("/genres", mediaController.getGenres);
 
+router.get("/genres/:genreId", mediaController.getByGenre);
+
 router.get("/detail/:mediaId", mediaController.getDetail);
 
 router.get("/:mediaCategory", mediaController.getList);
